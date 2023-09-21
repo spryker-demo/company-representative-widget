@@ -1,4 +1,5 @@
 {% extends model('component') %}
+{% import _self as  macros %}
 
 {% define config = {
     name: 'company-representative-widget-tile',
@@ -8,41 +9,38 @@
     title: null,
     icon: null,
     text: null,
+    companyRepresentativesUsers: required,
 } %}
+
+{% macro iconLink(url, iconName ) %}
+    <a target="_blank" href="{{ url }}" class="company-representative-widget-tile__icon-link">
+        {% include atom('icon') with {
+            class: 'company-representative-widget-tile__icon',
+            data: {
+                name: iconName,
+            },
+        } only %}
+    </a>
+{% endmacro %}
 
 {% block body %}
     <h3 class="{{ config.name }}__title">{{ 'customer.overview.customer.service.representative.title' | trans }}</h3>
 
-    {% if embed.companyRepresentativesUsers is not empty %}
+    {% if data.companyRepresentativesUsers is not empty %}
         <ul class="{{ config.name }}__list">
-            {% for companyRepresentativeUser in embed.companyRepresentativesUsers %}
+            {% for companyRepresentativeUser in data.companyRepresentativesUsers %}
                 <li class="{{ config.name }}__list-item">
-                    <img class="{{ config.name }}__photo" src="https://fakeimg.pl/30x30/">
+                    {% if companyRepresentativeUser.photo %}
+                        <img class="{{ config.name }}__photo" src="{{ companyRepresentativeUser.photo }}">
+                    {% endif %}
                     <div class="{{ config.name }}__name">{{ companyRepresentativeUser.firstName }} {{ companyRepresentativeUser.lastName }}</div>
-                    <a href="mailto:{{ companyRepresentativeUser.username }}" class="{{ config.name }}__icon-link">
-                        {% include atom('icon') with {
-                            class: config.name ~ '__icon',
-                            data: {
-                                name: 'icon-email-2',
-                            },
-                        } only %}
-                    </a>
-                    <a href="#" class="{{ config.name }}__icon-link">
-                        {% include atom('icon') with {
-                            class: config.name ~ '__icon',
-                            data: {
-                                name: 'icon-phone-2',
-                            },
-                        } only %}
-                    </a>
-                    <a href="#" class="{{ config.name }}__icon-link">
-                        {% include atom('icon') with {
-                            class: config.name ~ '__icon',
-                            data: {
-                                name: 'icon-whatsup-2',
-                            },
-                        } only %}
-                    </a>
+
+                    {{ macros.iconLink('mailto:' ~ companyRepresentativeUser.username, 'icon-email-2') }}
+
+                    {% if companyRepresentativeUser.phone %}
+                        {{ macros.iconLink('tel:' ~ companyRepresentativeUser.phone, 'icon-phone-2') }}
+                        {{ macros.iconLink('https://wa.me/' ~ companyRepresentativeUser.phone, 'icon-whatsup-2') }}
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
