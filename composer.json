@@ -7,7 +7,7 @@
         "php": ">=8.2",
         "spryker-demo/company-representative": "^1.0.0",
         "spryker/customer": "^7.48.1",
-        "spryker/kernel": "^3.70.0"
+        "spryker/kernel": "^3.75.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "^0.17.18"
